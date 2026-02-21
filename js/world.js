@@ -207,8 +207,10 @@ function upgradeItem() {
 function renderHippos() {
   const grid = document.getElementById('hippos-grid');
   if (!G.hippos.length) { grid.innerHTML=`<div class="empty-state"><span class="empty-icon">🦛</span><div class="empty-text">Нет бегемотов</div><button class="btn btn-primary btn-sm" onclick="setTabByName('cases')" style="margin-top:10px">📦 Кейсы</button></div>`; return; }
+  const activeIdx = G.activeHippo || 0;
   grid.innerHTML = G.hippos.map((h,i) => `
-    <div class="hippo-card rarity-${h.rarity} ${selectedHippo===i?'selected':''}" onclick="showHippoDetail(${i})">
+    <div class="hippo-card rarity-${h.rarity} ${selectedHippo===i?'selected':''}" onclick="showHippoDetail(${i})" style="position:relative">
+      ${i===activeIdx?'<div style="position:absolute;top:6px;right:6px;background:var(--success);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px">⚔️ БОЕЦ</div>':''}
       <span class="hippo-emoji">${h.emoji}</span>
       <div class="hippo-name">${h.name}</div>
       <div class="rarity-badge">${getRarityName(h.rarity)}</div>
@@ -251,7 +253,7 @@ function showHippoDetail(idx) {
       ${h.mutations.length<3?`<button class="btn btn-xs btn-purple" onclick="tryMutation(${idx})" style="margin-top:6px">🧬 Мутация (💎50)</button>`:''}
       <div class="divider"></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn btn-sm btn-primary" onclick="setTabByName('arena')">⚔️ Арена</button>
+        <button class="btn btn-sm btn-primary" onclick="selectAsFighter(${idx})">⚔️ Выбрать бойца</button>
         <button class="btn btn-sm btn-secondary" onclick="sendExpedition(${idx})">🧭 Экспедиция</button>
         <button class="btn btn-sm btn-danger" onclick="releaseHippo(${idx})">🗑️ Отпустить</button>
       </div>
@@ -293,6 +295,18 @@ function releaseHippo(idx) {
   toast(`${h.name} отпущен`,'success');
   saveGame(); selectedHippo=null; renderHippos();
   document.getElementById('hippo-detail-panel').innerHTML='<div class="empty-state"><span class="empty-icon">🦛</span><div class="empty-text">Выберите бегемота</div></div>';
+}
+
+function selectAsFighter(idx) {
+  const h = G.hippos[idx];
+  if (!h) return;
+  if (h.inValhalla) { toast('💀 Этот бегемот в Вальхалле!', 'error'); return; }
+  G.activeHippo = idx;
+  G.equippedHippo = idx;
+  saveGame();
+  toast(`⚔️ ${h.emoji} ${h.name} выбран как боец!`, 'success');
+  renderHippos();
+  showHippoDetail(idx);
 }
 
 // ========================
