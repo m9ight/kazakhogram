@@ -69,7 +69,7 @@ function beginFight(mode, opponentType) {
   }
 
   // Bot fight
-  let playerHippo = G.hippos[0];
+  let playerHippo = G.hippos[G.activeHippo||0];
   let enemy;
 
   if (mode === 'boss') {
@@ -109,7 +109,7 @@ function startPvPMatchmaking(mode) {
   document.getElementById('arena-select').style.display = 'none';
   document.getElementById('arena-battle-view').style.display = 'block';
 
-  const hippo = G.hippos[0];
+  const hippo = G.hippos[G.activeHippo||0];
   document.getElementById('battle-arena-box').innerHTML = `
     <div class="pvp-waiting">
       <span class="big-icon">⚔️</span>
@@ -159,7 +159,7 @@ function onMatchFound({ battle_id, opponent, side }) {
 
   toast(`⚔️ Найден противник: ${opponent.username}!`, 'success', 4000);
 
-  const myHippo = G.hippos[0];
+  const myHippo = G.hippos[G.activeHippo||0];
   const p1 = side === 'player1' ? myHippo : opponent.hippo;
   const p2 = side === 'player1' ? opponent.hippo : myHippo;
 
@@ -450,7 +450,7 @@ function endBattle(won, isPvP=false) {
       battleState.log.push({ turn: battleState.turn + 1, text: `🎁 Предмет: ${item.emoji} ${item.name}!`, class:'critical-entry' });
     }
     if (isBoss) G.bossCD = Date.now() + 30 * 60 * 1000;
-    const h = G.hippos[0];
+    const h = G.hippos[G.activeHippo||0];
     if (h) h.wins++;
     battleState.log.push({ turn: battleState.turn + 1, text: `🎉 ПОБЕДА! +${coins}🪙 +${xp}XP`, class:'critical-entry' });
     toast(`⚔️ Победа! +${coins} 🪙`, 'success');
@@ -461,7 +461,7 @@ function endBattle(won, isPvP=false) {
       G.elo = Math.max(0, G.elo - loss);
       battleState.log.push({ turn: battleState.turn + 1, text: `📉 ELO -${loss}. Рейтинг: ${G.elo}`, class:'hit-enemy' });
     }
-    const h = G.hippos[0];
+    const h = G.hippos[G.activeHippo||0];
     if (h) {
       h.losses++;
       h.deaths = (h.deaths||0) + 1;
@@ -486,7 +486,7 @@ function endBattle(won, isPvP=false) {
 // COLOSSEUM
 // ========================
 function startColosseum(size) {
-  const ph = G.hippos[0];
+  const ph = G.hippos[G.activeHippo||0];
   if (!ph) { toast('Нужен бегемот!', 'error'); return; }
 
   const participants = [{ ...ph, ownerName: G.playerName, isPlayer: true }];
