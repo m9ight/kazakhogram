@@ -1,17 +1,12 @@
-// Node.js 22.5+ has built-in SQLite — no installation needed!
 const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
 
 const DB_PATH = path.join(__dirname, 'hippowars.db');
 const db = new DatabaseSync(DB_PATH);
 
-// Enable WAL mode and foreign keys
 db.exec('PRAGMA journal_mode = WAL');
 db.exec('PRAGMA foreign_keys = ON');
 
-// ========================
-// SCHEMA
-// ========================
 db.exec(`
   CREATE TABLE IF NOT EXISTS players (
     id TEXT PRIMARY KEY,
@@ -29,6 +24,8 @@ db.exec(`
     losses INTEGER DEFAULT 0,
     clan_id TEXT,
     theme TEXT DEFAULT 'default',
+    is_admin INTEGER DEFAULT 0,
+    is_banned INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_online DATETIME DEFAULT CURRENT_TIMESTAMP
   );
@@ -109,8 +106,7 @@ db.exec(`
     elo INTEGER NOT NULL,
     mode TEXT NOT NULL,
     hippo_id TEXT NOT NULL,
-    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (player_id) REFERENCES players(id)
+    joined_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
   CREATE TABLE IF NOT EXISTS expeditions (
@@ -146,21 +142,29 @@ db.exec(`
   );
 `);
 
-// ========================
-// PREPARED STATEMENTS
-// node:sqlite has same API as better-sqlite3
-// .get(...args), .all(...args), .run(...args)
-// ========================
+// Add is_admin / is_banned columns if upgrading from old DB
+try { db.exec(`ALTER TABLE players ADD COLUMN is_admin INTEGER DEFAULT 0`); } catch {}
+try { db.exec(`ALTER TABLE players ADD COLUMN is_banned INTEGER DEFAULT 0`); } catch {}
+
 const stmts = {
   // Players
   createPlayer: db.prepare(`INSERT INTO players (id, username, password_hash, email) VALUES (?, ?, ?, ?)`),
   getPlayerById: db.prepare(`SELECT * FROM players WHERE id = ?`),
   getPlayerByUsername: db.prepare(`SELECT * FROM players WHERE username = ?`),
   updatePlayer: db.prepare(`UPDATE players SET level=?, xp=?, xp_needed=?, coins=?, gems=?, elo=?, wins=?, losses=?, avatar=?, theme=?, last_online=CURRENT_TIMESTAMP WHERE id=?`),
-  searchPlayers: db.prepare(`SELECT id, username, avatar, level, elo, wins, last_online FROM players WHERE username LIKE ? LIMIT 20`),
+  searchPlayers: db.prepare(`SELECT id, username, avatar, level, elo, wins, last_online, is_admin FROM players WHERE username LIKE ? LIMIT 20`),
   getLeaderboard: db.prepare(`SELECT id, username, avatar, level, elo, wins, losses FROM players ORDER BY elo DESC LIMIT 50`),
   getLeaderboardByWins: db.prepare(`SELECT id, username, avatar, level, elo, wins, losses FROM players ORDER BY wins DESC LIMIT 50`),
   getLeaderboardByLevel: db.prepare(`SELECT id, username, avatar, level, elo, wins, losses FROM players ORDER BY level DESC LIMIT 50`),
+
+  // Admin
+  getAllPlayers: db.prepare(`SELECT id, username, avatar, level, elo, wins, losses, coins, gems, is_admin, is_banned, created_at, last_online FROM players ORDER BY created_at DESC`),
+  setAdmin: db.prepare(`UPDATE players SET is_admin=? WHERE id=?`),
+  setBanned: db.prepare(`UPDATE players SET is_banned=? WHERE id=?`),
+  giveCoins: db.prepare(`UPDATE players SET coins=coins+? WHERE id=?`),
+  giveGems: db.prepare(`UPDATE players SET gems=gems+? WHERE id=?`),
+  deletePlayer: db.prepare(`DELETE FROM players WHERE id=?`),
+  getStats: db.prepare(`SELECT (SELECT COUNT(*) FROM players) as total_players, (SELECT COUNT(*) FROM hippos) as total_hippos, (SELECT COUNT(*) FROM battles) as total_battles, (SELECT COUNT(*) FROM clans) as total_clans`),
 
   // Hippos
   createHippo: db.prepare(`INSERT INTO hippos (id, owner_id, name, emoji, rarity, stats, mutations, equipped) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`),
@@ -211,7 +215,6 @@ const stmts = {
   // Notifications
   createNotification: db.prepare(`INSERT INTO notifications (id, player_id, type, data) VALUES (?, ?, ?, ?)`),
   getNotifications: db.prepare(`SELECT * FROM notifications WHERE player_id=? AND read=0 ORDER BY created_at DESC LIMIT 20`),
-  markNotifRead: db.prepare(`UPDATE notifications SET read=1 WHERE id=? AND player_id=?`),
   markAllNotifsRead: db.prepare(`UPDATE notifications SET read=1 WHERE player_id=?`),
 };
 
