@@ -25,11 +25,35 @@ app.use('/api/auth', require('./routes/auth').router);
 app.use('/api/players', require('./routes/players'));
 app.use('/api/bossfights', require('./routes/bossfights'));
 app.use('/api/clans', require('./routes/clans'));
+app.use('/api/admin', require('./routes/admin'));
 
 // Serve frontend
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '..', 'index.html')));
 app.get('/game', (req, res) => res.sendFile(path.join(__dirname, '..', 'game.html')));
 app.get('/bossfight', (req, res) => res.sendFile(path.join(__dirname, '..', 'game.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '..', 'admin.html')));
+
+// Auto-create admin account on startup
+(async () => {
+  const bcrypt = require('bcryptjs');
+  const { v4: uuidv4 } = require('uuid');
+  const existing = stmts.getPlayerByUsername.get('admin');
+  if (!existing) {
+    const hash = await bcrypt.hash('admintest', 10);
+    const id = uuidv4();
+    stmts.createPlayer.run(id, 'admin', hash, 'admin@hippowars.local');
+    db.prepare('UPDATE players SET is_admin=1, coins=999999, gems=99999, level=100 WHERE id=?').run(id);
+    const hippoId = 'h_' + uuidv4();
+    stmts.createHippo.run(hippoId, id, 'АдминБег', '🦛', 'mythic',
+      JSON.stringify({ str: 99, agi: 99, int: 99, vit: 99, lck: 99 }),
+      JSON.stringify(['fire', 'berserk', 'vampire']),
+      JSON.stringify({ weapon: null, armor: null, accessory: null, artifact: null }));
+    console.log('✅ Admin account created: login=admin / password=admintest');
+  } else if (!existing.is_admin) {
+    db.prepare('UPDATE players SET is_admin=1 WHERE username=?').run('admin');
+    console.log('✅ Existing admin account upgraded to is_admin=1');
+  }
+})();
 
 // ========================
 // SOCKET.IO MULTIPLAYER
