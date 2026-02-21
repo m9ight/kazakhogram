@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HippoWars 🦛 — Арена</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/theme-african.css">
+<link rel="stylesheet" href="css/theme-naruto.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="game-header">
+  <span class="game-logo">🦛 HippoWars</span>
+  <div class="header-stats">
+    <div class="stat-pill">🪙 <span id="hdr-coins">0</span></div>
+    <div class="stat-pill">💎 <span id="hdr-gems">0</span></div>
+    <div class="stat-pill">⚔️ Ур.<span id="hdr-level">1</span></div>
+    <div class="stat-pill">👤 <span id="hdr-name">-</span></div>
+    <div class="stat-pill online-count"><div class="online-dot"></div><span id="online-count-display">—</span></div>
+    <button class="header-btn" id="notif-btn" onclick="toggleNotifPanel()">🔔</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div id="main-nav">
+  <button class="nav-btn active" onclick="setTab('home',this)">🏠 Главная</button>
+  <button class="nav-btn" onclick="setTab('cases',this)">📦 Кейсы</button>
+  <button class="nav-btn" onclick="setTab('inventory',this)">🎒 Инвентарь</button>
+  <button class="nav-btn" onclick="setTab('hippos',this)">🦛 Бегемоты</button>
+  <button class="nav-btn" onclick="setTab('arena',this)">⚔️ Арена</button>
+  <button class="nav-btn" onclick="setTab('bossfight',this)">👹 Босс-файт</button>
+  <button class="nav-btn" onclick="setTab('world',this)">🗺️ Мир</button>
+  <button class="nav-btn" onclick="setTab('clans',this)">🏰 Кланы</button>
+  <button class="nav-btn" onclick="setTab('leaderboard',this)">🏆 Рейтинг</button>
+  <button class="nav-btn" onclick="setTab('search',this)">🔍 Поиск</button>
+  <button class="nav-btn" onclick="setTab('shop',this)">🛒 Магазин</button>
+  <button class="nav-btn" onclick="setTab('valhalla',this)">💀 Вальхалла</button>
+  <button class="nav-btn" onclick="setTab('profile',this)">👤 Профиль</button>
+</div>
+
+<div id="game-content">
+
+  <!-- =================== HOME =================== -->
+  <div class="section active" id="tab-home">
+    <div class="section-title">🏠 Панель командира</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">👤 Боец</div>
+        <div style="text-align:center;padding:14px 0">
+          <div style="font-size:60px" id="home-hippo-emoji">🦛</div>
+          <div style="font-family:var(--font-title);font-size:16px;font-weight:700;margin:6px 0" id="home-player-name">-</div>
+          <div style="color:var(--text2);font-size:12px" id="home-player-title">Новобранец</div>
+          <div style="margin-top:14px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:3px"><span>Опыт</span><span id="home-xp">0/100</span></div>
+            <div class="progress-bar"><div class="progress-fill xp" id="home-xp-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="grid-2" style="gap:8px;margin-top:12px">
+          <div style="background:var(--bg3);padding:10px;border-radius:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--success)" id="home-wins">0</div><div style="font-size:10px;color:var(--text2)">Победы</div></div>
+          <div style="background:var(--bg3);padding:10px;border-radius:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--danger)" id="home-losses">0</div><div style="font-size:10px;color:var(--text2)">Поражения</div></div>
+          <div style="background:var(--bg3);padding:10px;border-radius:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--gold)" id="home-elo">1000</div><div style="font-size:10px;color:var(--text2)">ELO</div></div>
+          <div style="background:var(--bg3);padding:10px;border-radius:10px;text-align:center"><div style="font-size:18px;font-weight:700;color:var(--rare)" id="home-hippos">0</div><div style="font-size:10px;color:var(--text2)">Бегемотов</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Дейлики</div>
+        <div id="daily-quests"></div>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top:0">
+      <div class="card" style="text-align:center;cursor:pointer" onclick="setTabByName('cases')">
+        <div style="font-size:44px">📦</div><div style="font-weight:700;margin-top:6px">Кейсы</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:3px">Получи бегемота</div>
+      </div>
+      <div class="card" style="text-align:center;cursor:pointer" onclick="setTabByName('arena')">
+        <div style="font-size:44px">⚔️</div><div style="font-weight:700;margin-top:6px">Арена</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:3px">PvP или бот</div>
+      </div>
+      <div class="card" style="text-align:center;cursor:pointer" onclick="setTabByName('bossfight')">
+        <div style="font-size:44px">👹</div><div style="font-weight:700;margin-top:6px">Босс-файт</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:3px">Сквад против босса</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📰 События</div>
+      <div id="world-events"></div>
+    </div>
+  </div>
+
+  <!-- =================== CASES =================== -->
+  <div class="section" id="tab-cases">
+    <div class="section-title">📦 Кейсы с бегемотами</div>
+    <div class="grid-4" id="cases-grid"></div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-title">🎲 Статистика</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div class="stat-tag"><span id="total-opens">0</span> открыто</div>
+        <div class="stat-tag" style="color:var(--legendary)"><span id="legendary-opens">0</span> легенд.</div>
+        <div class="stat-tag" style="color:var(--mythic)"><span id="mythic-opens">0</span> мифич.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== INVENTORY =================== -->
+  <div class="section" id="tab-inventory">
+    <div class="section-title">🎒 Инвентарь</div>
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <div class="card-title">🗡️ Предметы</div>
+          <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+            <button class="btn btn-xs btn-secondary" onclick="filterInventory('all')">Все</button>
+            <button class="btn btn-xs btn-secondary" onclick="filterInventory('weapon')">⚔️ Оружие</button>
+            <button class="btn btn-xs btn-secondary" onclick="filterInventory('armor')">🛡️ Броня</button>
+            <button class="btn btn-xs btn-secondary" onclick="filterInventory('accessory')">💍 Аксы</button>
+            <button class="btn btn-xs btn-secondary" onclick="filterInventory('artifact')">🔮 Арт.</button>
+          </div>
+          <div class="grid-4" id="inventory-grid"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ Улучшение</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Выбери предмет для улучшения</div>
+          <div id="selected-upgrade-item" style="margin-bottom:12px"></div>
+          <div class="upgrade-chance">Шанс: <span id="upgrade-chance-val">75%</span></div>
+          <div class="progress-bar" style="margin-bottom:10px"><div class="progress-fill" id="upgrade-pity-bar" style="width:0%;background:linear-gradient(90deg,var(--accent3),var(--rare))"></div></div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:10px;text-align:center">Пити: <span id="upgrade-pity-val">0</span>/10</div>
+          <button class="btn btn-primary" onclick="upgradeItem()" id="upgrade-btn" disabled>⚡ Улучшить</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🦛 Экипировка</div>
+        <div id="equip-hippo-select" style="margin-bottom:12px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="equip-slots">
+          <div style="background:var(--bg3);border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:3px">⚔️</div><div style="font-size:10px;color:var(--text3)">Оружие</div><div id="slot-weapon" style="font-size:11px;color:var(--accent);margin-top:3px">Пусто</div></div>
+          <div style="background:var(--bg3);border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:3px">🛡️</div><div style="font-size:10px;color:var(--text3)">Броня</div><div id="slot-armor" style="font-size:11px;color:var(--accent);margin-top:3px">Пусто</div></div>
+          <div style="background:var(--bg3);border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:3px">💍</div><div style="font-size:10px;color:var(--text3)">Аксессуар</div><div id="slot-accessory" style="font-size:11px;color:var(--accent);margin-top:3px">Пусто</div></div>
+          <div style="background:var(--bg3);border:2px dashed var(--border);border-radius:10px;padding:14px;text-align:center"><div style="font-size:22px;margin-bottom:3px">🔮</div><div style="font-size:10px;color:var(--text3)">Артефакт</div><div id="slot-artifact" style="font-size:11px;color:var(--accent);margin-top:3px">Пусто</div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title" style="font-size:12px">📊 Итого</div>
+        <div id="equipped-stats"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== HIPPOS =================== -->
+  <div class="section" id="tab-hippos">
+    <div class="section-title">🦛 Мои бегемоты</div>
+    <div class="grid-2">
+      <div id="hippos-grid"></div>
+      <div id="hippo-detail-panel">
+        <div class="empty-state"><span class="empty-icon">🦛</span><div class="empty-text">Выбери бегемота</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== ARENA =================== -->
+  <div class="section" id="tab-arena">
+    <div class="section-title">⚔️ Арена боёв</div>
+    <div id="arena-select" class="grid-3">
+      <div class="arena-mode-card" onclick="startArena('casual')">
+        <span class="arena-mode-icon">🥊</span>
+        <div class="arena-mode-name">Обычный бой</div>
+        <div class="arena-mode-desc">Практика без влияния на рейтинг. Монеты и опыт</div>
+        <div style="margin-top:10px"><span class="tag tag-hot">Популярно</span></div>
+      </div>
+      <div class="arena-mode-card" onclick="startArena('ranked')">
+        <span class="arena-mode-icon">🏆</span>
+        <div class="arena-mode-name">Рейтинговый</div>
+        <div class="arena-mode-desc">ELO рейтинг. Победы повышают позицию</div>
+        <div style="margin-top:10px">ELO: <span style="color:var(--gold);font-weight:700" id="arena-elo">1000</span></div>
+      </div>
+      <div class="arena-mode-card" onclick="startArena('colosseum')">
+        <span class="arena-mode-icon">🏟️</span>
+        <div class="arena-mode-name">Колизей</div>
+        <div class="arena-mode-desc">Турнир 8-32 бегемотов. Выживший берёт всё!</div>
+        <div style="margin-top:10px"><span class="tag tag-new">Горячо</span></div>
+      </div>
+      <div class="arena-mode-card" onclick="startArena('boss')">
+        <span class="arena-mode-icon">👹</span>
+        <div class="arena-mode-name">Босс-файт (соло)</div>
+        <div class="arena-mode-desc">Один против мощного босса за легендарный лут</div>
+        <div style="margin-top:10px">КД: <span style="color:var(--danger);font-weight:700" id="boss-cd">Готов!</span></div>
+      </div>
+      <div class="arena-mode-card" onclick="startArena('team')">
+        <span class="arena-mode-icon">🤝</span>
+        <div class="arena-mode-name">2 на 2</div>
+        <div class="arena-mode-desc">Командный бой — синергия решает</div>
+        <div style="margin-top:10px"><span class="tag tag-pvp">PvP</span></div>
+      </div>
+      <div class="arena-mode-card" onclick="startArena('bounty')">
+        <span class="arena-mode-icon">🎯</span>
+        <div class="arena-mode-name">Баунти Охота</div>
+        <div class="arena-mode-desc">Охоться на игроков с наградой!</div>
+        <div style="margin-top:10px"><span class="tag tag-hot">Опасно</span></div>
+      </div>
+    </div>
+
+    <div id="arena-battle-view" style="display:none;margin-top:16px">
+      <div class="battle-arena" id="battle-arena-box"></div>
+      <div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap" id="battle-action-btns"></div>
+    </div>
+
+    <div id="arena-colosseum-view" style="display:none;margin-top:16px">
+      <div class="card">
+        <div class="card-title">🏟️ Колизей</div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-sm" onclick="startColosseum(8)">8 бойцов</button>
+          <button class="btn btn-secondary btn-sm" onclick="startColosseum(16)">16 бойцов</button>
+          <button class="btn btn-gold btn-sm" onclick="startColosseum(32)">32 — Гранд Турнир</button>
+        </div>
+        <div id="colosseum-bracket" style="max-height:400px;overflow-y:auto"></div>
+        <div id="colosseum-result" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== BOSS FIGHT =================== -->
+  <div class="section" id="tab-bossfight">
+    <!-- Rendered dynamically -->
+  </div>
+
+  <!-- =================== WORLD =================== -->
+  <div class="section" id="tab-world">
+    <div class="section-title">🗺️ Карта мира</div>
+    <div class="world-map" id="world-map-grid"></div>
+    <div class="card" style="margin-top:16px">
+      <div class="card-title">🧭 Активные экспедиции</div>
+      <div id="expeditions-list"></div>
+    </div>
+  </div>
+
+  <!-- =================== CLANS =================== -->
+  <div class="section" id="tab-clans">
+    <div class="section-title">🏰 Кланы</div>
+    <div class="grid-2">
+      <div>
+        <div class="card"><div class="card-title">⚔️ Мой клан</div><div id="my-clan-info"></div></div>
+        <div class="card"><div class="card-title">🏰 Все кланы</div><div id="clan-list"></div></div>
+      </div>
+      <div class="card"><div class="card-title">💣 Война кланов</div><div id="clan-war-info"></div></div>
+    </div>
+  </div>
+
+  <!-- =================== LEADERBOARD =================== -->
+  <div class="section" id="tab-leaderboard">
+    <div class="section-title">🏆 Рейтинг</div>
+    <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+      <button class="btn btn-secondary btn-sm" onclick="loadLeaderboard('elo')">🏆 ELO</button>
+      <button class="btn btn-secondary btn-sm" onclick="loadLeaderboard('wins')">⚔️ Победы</button>
+      <button class="btn btn-secondary btn-sm" onclick="loadLeaderboard('level')">📊 Уровень</button>
+    </div>
+    <div id="leaderboard-list"></div>
+  </div>
+
+  <!-- =================== SEARCH =================== -->
+  <div class="section" id="tab-search">
+    <div class="section-title">🔍 Поиск игроков</div>
+    <div class="card">
+      <div class="card-title">Найти игрока</div>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <input class="form-input" id="search-input" placeholder="Введи имя игрока..." oninput="doSearch(this.value)" style="flex:1">
+      </div>
+      <div id="search-results"></div>
+    </div>
+  </div>
+
+  <!-- =================== SHOP =================== -->
+  <div class="section" id="tab-shop">
+    <div class="section-title">🛒 Магазин</div>
+    <div class="card"><div class="card-title">💰 Ресурсы</div><div class="grid-4" id="shop-resources"></div></div>
+    <div class="card"><div class="card-title">⚔️ Оружие</div><div class="grid-4" id="shop-weapons"></div></div>
+    <div class="card"><div class="card-title">🛡️ Броня</div><div class="grid-4" id="shop-armor"></div></div>
+    <div class="card"><div class="card-title">🔮 Артефакты</div><div class="grid-4" id="shop-artifacts"></div></div>
+  </div>
+
+  <!-- =================== VALHALLA =================== -->
+  <div class="section" id="tab-valhalla">
+    <div class="card" style="text-align:center;padding:40px;background:linear-gradient(180deg,#1a0a0a,#0d0d1a)">
+      <div style="font-size:72px;margin-bottom:14px">💀</div>
+      <div class="valhalla-title" style="font-family:var(--font-title);font-size:26px;font-weight:900;margin-bottom:10px">ВАЛЬХАЛЛА</div>
+      <div style="color:var(--text2);font-size:13px;line-height:1.8;max-width:480px;margin:0 auto">
+        Если бегемот погибает 20 раз — он попадает в Вальхаллу.<br>
+        Победи одного из <strong style="color:#ff6600">5 Великих Боссов</strong> чтобы выбраться.
+      </div>
+      <div style="margin-top:28px">
+        <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Статус твоих бегемотов</div>
+        <div id="valhalla-hippos"></div>
+      </div>
+      <div style="margin-top:20px">
+        <div class="card-title" style="justify-content:center">👹 Боссы Вальхаллы</div>
+        <div class="grid-3" id="valhalla-bosses" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== PROFILE =================== -->
+  <div class="section" id="tab-profile">
+    <!-- Rendered dynamically -->
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay" style="display:none" class="modal-overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">-</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- SCRIPTS -->
+<script src="/socket.io/socket.io.js" onerror="console.log('Socket.IO not available, offline mode')"></script>
+<script src="js/data.js"></script>
+<script src="js/game-core.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/world.js"></script>
+<script src="js/multiplayer.js"></script>
+
+<script>
+// ========================
+// INIT
+// ========================
+loadGame();
+updateHeader();
+
+// Apply saved theme
+applyTheme(G.theme || 'default');
+
+// Give starter hippo if none
+if (G.hippos.length === 0) {
+  G.hippos.push(generateHippo('uncommon'));
+  G.coins = 500; G.gems = 50;
+  saveGame();
+  setTimeout(() => toast('🦛 Добро пожаловать! Стартовый бегемот выдан!', 'success', 4000), 500);
+}
+
+// Init socket if logged in
+if (G.token) {
+  initSocket();
+} else {
+  // Offline indicator
+  const el = document.getElementById('online-count-display');
+  if (el) el.textContent = 'офлайн';
+}
+
+// Load from server in background
+if (G.token) {
+  loadFromServer().then(() => {
+    updateHeader();
+    renderTab('home');
+  });
+}
+
+renderHome();
+
+// Auto-update expeditions
+setInterval(() => {
+  if (document.getElementById('tab-world').classList.contains('active')) {
+    renderExpeditions();
+  }
+}, 5000);
+
+// Handle invite code in URL
+const inviteCode = new URLSearchParams(window.location.search).get('invite');
+if (inviteCode) {
+  setTimeout(() => {
+    setTabByName('bossfight');
+    setTimeout(() => {
+      renderBossFightTab();
+      setTimeout(() => {
+        const input = document.getElementById('invite-code-input');
+        if (input) { input.value = inviteCode; joinBossLobbyByCode(); }
+      }, 300);
+    }, 300);
+  }, 500);
+}
+</script>
+</body>
+</html>

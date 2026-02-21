@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HippoWars 🦛 — Войти</title>
+<link rel="stylesheet" href="css/base.css">
+<style>
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 36px;
+  width: 100%;
+  max-width: 420px;
+}
+.auth-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.auth-logo-emoji { font-size: 64px; display: block; margin-bottom: 8px; animation: float 3s ease-in-out infinite; }
+.auth-logo-name {
+  font-family: var(--font-title);
+  font-size: 24px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #00d4aa, #a855f7, #ff6b00);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+.auth-tab {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg3);
+  color: var(--text2);
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+}
+.auth-tab.active { background: var(--accent3); border-color: var(--accent); color: white; }
+.auth-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 28px;
+}
+.feature-pill {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text2);
+}
+.feature-pill .icon { font-size: 22px; display: block; margin-bottom: 4px; }
+.guest-btn {
+  text-align: center;
+  margin-top: 16px;
+}
+</style>
+</head>
+<body>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="auth-logo-emoji">🦛</span>
+      <div class="auth-logo-name">HippoWars</div>
+      <div style="color:var(--text2);font-size:13px;margin-top:4px">Мультиплеерная битва бегемотов</div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Войти</button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Регистрация</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="form-login">
+      <div class="form-group">
+        <label class="form-label">Имя игрока</label>
+        <input class="form-input" id="login-username" placeholder="Введи имя..." autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input class="form-input" id="login-password" type="password" placeholder="Пароль..." autocomplete="current-password">
+      </div>
+      <div id="login-error" style="color:var(--danger);font-size:12px;margin-bottom:12px;display:none"></div>
+      <button class="btn btn-primary btn-full" onclick="doLogin()" id="login-btn">🚀 Войти</button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="form-register" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Имя игрока</label>
+        <input class="form-input" id="reg-username" placeholder="3-20 символов..." autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <input class="form-input" id="reg-password" type="password" placeholder="Минимум 4 символа..." autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email (необязательно)</label>
+        <input class="form-input" id="reg-email" type="email" placeholder="Для восстановления..." autocomplete="email">
+      </div>
+      <div id="reg-error" style="color:var(--danger);font-size:12px;margin-bottom:12px;display:none"></div>
+      <button class="btn btn-primary btn-full" onclick="doRegister()" id="reg-btn">🎮 Зарегистрироваться</button>
+    </div>
+
+    <div class="guest-btn">
+      <button class="btn btn-secondary" style="font-size:12px;padding:8px 16px" onclick="playAsGuest()">👻 Играть без аккаунта</button>
+    </div>
+  </div>
+
+  <div class="auth-features" style="max-width:420px;width:100%">
+    <div class="feature-pill"><span class="icon">🌐</span>Real-time PvP</div>
+    <div class="feature-pill"><span class="icon">👹</span>Босс-файты</div>
+    <div class="feature-pill"><span class="icon">🏆</span>Глобальный рейтинг</div>
+    <div class="feature-pill"><span class="icon">🏰</span>Кланы и войны</div>
+    <div class="feature-pill"><span class="icon">🌍</span>Карта мира</div>
+    <div class="feature-pill"><span class="icon">🎨</span>Темы оформления</div>
+  </div>
+
+  <div style="margin-top:16px;font-size:11px;color:var(--text3);text-align:center">
+    Прогресс синхронизируется между устройствами
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+function switchTab(tab) {
+  document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+}
+
+async function doLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errDiv = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  if (!username || !password) { showError(errDiv, 'Заполни все поля'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Входим...';
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) { showError(errDiv, data.error); btn.disabled=false; btn.textContent='🚀 Войти'; return; }
+    localStorage.setItem('hw_token', data.token);
+    localStorage.setItem('hw_session', JSON.stringify({ id: data.player.id, username: data.player.username }));
+    window.location.href = '/game';
+  } catch { showError(errDiv, 'Сервер недоступен'); btn.disabled=false; btn.textContent='🚀 Войти'; }
+}
+
+async function doRegister() {
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const email = document.getElementById('reg-email').value.trim();
+  const errDiv = document.getElementById('reg-error');
+  const btn = document.getElementById('reg-btn');
+  if (!username || !password) { showError(errDiv, 'Заполни имя и пароль'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Регистрируем...';
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, email })
+    });
+    const data = await res.json();
+    if (!res.ok) { showError(errDiv, data.error); btn.disabled=false; btn.textContent='🎮 Зарегистрироваться'; return; }
+    localStorage.setItem('hw_token', data.token);
+    localStorage.setItem('hw_session', JSON.stringify({ id: data.player.id, username: data.player.username }));
+    window.location.href = '/game';
+  } catch { showError(errDiv, 'Сервер недоступен'); btn.disabled=false; btn.textContent='🎮 Зарегистрироваться'; }
+}
+
+function playAsGuest() {
+  window.location.href = '/game';
+}
+
+function showError(el, msg) {
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 4000);
+}
+
+// Redirect if already logged in
+if (localStorage.getItem('hw_token')) {
+  // Validate token then redirect
+  fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('hw_token') } })
+    .then(r => { if (r.ok) window.location.href = '/game'; })
+    .catch(() => {});
+}
+
+// Handle Enter key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const loginForm = document.getElementById('form-login');
+    if (loginForm.style.display !== 'none') doLogin();
+    else doRegister();
+  }
+});
+
+// Toast
+function toast(msg, type='') {
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = `<span>${type==='success'?'✓':type==='error'?'✕':'ℹ'}</span><span>${msg}</span>`;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => { t.style.animation='toastIn 0.3s ease reverse'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+</script>
+</body>
+</html>

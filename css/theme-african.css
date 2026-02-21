@@ -1,0 +1,232 @@
+/* ========================
+   AFRICAN THEME 🌍
+   Savanna | Earth | Tribal
+   ======================== */
+
+body.theme-african {
+  --bg: #1a0e06;
+  --bg2: #241508;
+  --bg3: #301c0a;
+  --bg4: #3d240e;
+  --accent: #e8a21a;
+  --accent2: #c47c0f;
+  --accent3: #8b4513;
+  --gold: #f5c842;
+  --silver: #a89070;
+  --bronze: #8b6914;
+  --danger: #cc2200;
+  --success: #4a7c3f;
+  --text: #f5e6cc;
+  --text2: #c4a068;
+  --text3: #7a5a30;
+  --border: #3d2a10;
+  --rare: #cc5500;
+  --epic: #ffa500;
+  --legendary: #ff7700;
+  --mythic: #ff3300;
+  --font-main: 'Manrope', sans-serif;
+  --font-title: 'Unbounded', sans-serif;
+
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(232,162,26,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 90% 10%, rgba(139,69,19,0.1) 0%, transparent 60%);
+}
+
+/* Tribal pattern overlay */
+body.theme-african::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e8a21a' fill-opacity='0.03'%3E%3Cpath d='M30 0l30 30-30 30L0 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+body.theme-african > * { position: relative; z-index: 1; }
+
+/* Logo */
+body.theme-african .game-logo {
+  background: linear-gradient(135deg, #f5c842, #cc5500, #8b4513);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+}
+
+/* Header */
+body.theme-african #game-header {
+  background: linear-gradient(90deg, #1a0e06, #2a1508);
+  border-bottom: 2px solid #e8a21a44;
+}
+
+/* Nav */
+body.theme-african #main-nav {
+  background: #1f1006;
+  border-bottom: 1px solid #3d2a10;
+}
+body.theme-african .nav-btn.active {
+  color: #e8a21a;
+  border-bottom-color: #e8a21a;
+}
+
+/* Cards */
+body.theme-african .card {
+  background: linear-gradient(135deg, #241508, #301c0a);
+  border-color: #3d2a10;
+  border-radius: 14px;
+}
+
+/* Buttons */
+body.theme-african .btn-primary {
+  background: linear-gradient(135deg, #e8a21a, #c47c0f);
+  color: #1a0e06;
+}
+body.theme-african .btn-gold {
+  background: linear-gradient(135deg, #f5c842, #cc8800);
+  color: #1a0e06;
+}
+body.theme-african .btn-purple {
+  background: linear-gradient(135deg, #8b4513, #5c2d0a);
+  color: #f5e6cc;
+}
+
+/* Arena */
+body.theme-african .battle-arena {
+  background: linear-gradient(180deg, #0d0700 0%, #1a0e06 50%, #251208 100%);
+}
+
+/* African decorative elements */
+body.theme-african .section-title::before {
+  content: '🌍';
+  font-size: 20px;
+}
+
+/* Hippo cards */
+body.theme-african .hippo-card {
+  background: linear-gradient(135deg, #301c0a, #241508);
+}
+
+/* Progress bars */
+body.theme-african .progress-fill.xp {
+  background: linear-gradient(90deg, #c47c0f, #e8a21a);
+}
+
+/* Valhalla */
+body.theme-african .valhalla-title {
+  color: #ff7700;
+}
+
+/* Arena mode cards */
+body.theme-african .arena-mode-card {
+  background: linear-gradient(135deg, #301c0a, #1a0e06);
+  border-color: #3d2a10;
+}
+
+/* Map regions */
+body.theme-african .map-region {
+  background: linear-gradient(135deg, #301c0a, #241508);
+}
+
+/* Toast */
+body.theme-african .toast {
+  background: #241508;
+  border-color: #3d2a10;
+}
+body.theme-african .toast.success { border-color: #4a7c3f; }
+body.theme-african .toast.legendary { background: rgba(255,119,0,0.15); border-color: #ff7700; }
+
+/* Scrollbar */
+body.theme-african ::-webkit-scrollbar-thumb { background: #3d2a10; }
+
+/* Input */
+body.theme-african .form-input {
+  background: #301c0a;
+  border-color: #3d2a10;
+  color: #f5e6cc;
+}
+body.theme-african .form-input:focus { border-color: #e8a21a; }
+
+/* African font feel for titles */
+body.theme-african .card-title,
+body.theme-african .section-title {
+  letter-spacing: 1px;
+}
+
+/* Clan card */
+body.theme-african .clan-card {
+  background: linear-gradient(135deg, #301c0a, #241508);
+}
+
+/* Leader rows */
+body.theme-african .leader-row {
+  background: #301c0a;
+}
+
+/* Shop items */
+body.theme-african .shop-item {
+  background: #301c0a;
+  border-color: #3d2a10;
+}
+
+/* Stat tag */
+body.theme-african .stat-tag {
+  background: #3d2a10;
+  border-color: #5a3a18;
+}
+
+/* African-themed stat pill */
+body.theme-african .stat-pill {
+  background: #301c0a;
+  border-color: #3d2a10;
+}
+
+/* Expedition */
+body.theme-african .expedition-card {
+  background: #301c0a;
+  border-color: #3d2a10;
+}
+body.theme-african .expedition-timer {
+  color: #e8a21a;
+}
+
+/* Boss lobby */
+body.theme-african .lobby-member {
+  background: #301c0a;
+  border-color: #3d2a10;
+}
+
+/* Case cards */
+body.theme-african .case-card {
+  background: linear-gradient(135deg, #301c0a, #1a0e06);
+  border-color: #3d2a10;
+}
+
+/* Modal */
+body.theme-african .modal {
+  background: #241508;
+  border-color: #3d2a10;
+}
+
+/* Notify panel */
+body.theme-african .notif-panel {
+  background: #241508;
+  border-color: #3d2a10;
+}
+body.theme-african .notif-item {
+  background: #301c0a;
+}
+body.theme-african .notif-item.unread {
+  border-left-color: #e8a21a;
+}
+
+/* Online dot */
+body.theme-african .online-dot {
+  background: #4a7c3f;
+}
+
+/* VS badge */
+body.theme-african .vs-badge {
+  color: #e8a21a;
+  text-shadow: 0 0 20px rgba(232,162,26,0.5);
+}
